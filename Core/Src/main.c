@@ -74,10 +74,11 @@ DMA_HandleTypeDef hdma_usart6_rx;
 DMA_HandleTypeDef hdma_usart6_tx;
 
 osThreadId defaultTaskHandle;
-osThreadId RAMTask2;
+
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+osThreadId RAMTask2;
 
 /* USER CODE END PV */
 
@@ -95,10 +96,11 @@ static void MX_IWDG_Init(void);
 void StartDefaultTask(void const * argument);
 void Task2(void const * argument);
 
-static void MX_NVIC_Init(void);
+
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+static void MX_NVIC_Init(void);
 
 /* USER CODE END PFP */
 
@@ -167,11 +169,11 @@ int main(void)
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
+  /* USER CODE BEGIN RTOS_THREADS */
+  /* add threads, ... */
   osThreadDef(defaultTask2, Task2, osPriorityNormal, 0, 128);
    RAMTask2 = osThreadCreate(osThread(defaultTask2), NULL);
 
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -559,6 +561,29 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void Task2(void const * argument)
+{
+
+  /* USER CODE BEGIN 5 */
+  /* Infinite loop */
+	int i = 0 ;
+  for(;;)
+  {
+
+    //buat program disini
+	for (i=0; i < 10; i++){
+		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+		osDelay(500);
+	}
+	i = 0;
+	for ( i=0; i < 10; i++){
+		HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+		osDelay(1000);
+	}
+
+  }
+  /* USER CODE END 5 */
+}
 
 /* USER CODE END 4 */
 
@@ -571,43 +596,18 @@ void StartDefaultTask(void const * argument)
   for(;;)
   {
 
-    HAL_IWDG_Refresh(&hiwdg);
-    HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-    osDelay(200);
-    HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    osDelay(200);
-    HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
-    osDelay(100);
+    //HAL_IWDG_Refresh(&hiwdg);
+	for (int i=0; i < 100; i++){
+		HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+		osDelay(200);
+		HAL_IWDG_Refresh(&hiwdg);
+	}
+
   }
   /* USER CODE END 5 */ 
 }
 
-void Task2(void const * argument)
-{
 
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-
-    //buat program disini
-	HAL_IWDG_Refresh(&hiwdg);
-	for (int i=0; i < 100; i++){
-		HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-		osDelay(200);
-	}
-	for (int i=0; i < 100; i++){
-		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-		osDelay(200);
-	}
-	for (int i=0; i < 100; i++){
-		HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
-		osDelay(100);
-	}
-
-  }
-  /* USER CODE END 5 */
-}
 
 /**
   * @brief  Period elapsed callback in non blocking mode
