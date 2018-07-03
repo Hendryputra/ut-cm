@@ -74,6 +74,7 @@ DMA_HandleTypeDef hdma_usart6_rx;
 DMA_HandleTypeDef hdma_usart6_tx;
 
 osThreadId defaultTaskHandle;
+osThreadId RAMTask2;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -92,6 +93,8 @@ static void MX_USART1_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_IWDG_Init(void);
 void StartDefaultTask(void const * argument);
+void Task2(void const * argument);
+
 static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN PFP */
@@ -163,6 +166,9 @@ int main(void)
   /* definition and creation of defaultTask */
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+
+  osThreadDef(defaultTask2, Task2, osPriorityNormal, 0, 128);
+   RAMTask2 = osThreadCreate(osThread(defaultTask2), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -574,6 +580,20 @@ void StartDefaultTask(void const * argument)
     osDelay(100);
   }
   /* USER CODE END 5 */ 
+}
+
+void Task2(void const * argument)
+{
+
+  /* USER CODE BEGIN 5 */
+  /* Infinite loop */
+  for(;;)
+  {
+
+    //buat program disini
+    osDelay(100);
+  }
+  /* USER CODE END 5 */
 }
 
 /**
