@@ -591,7 +591,20 @@ void Task2(void const * argument)
   {
 
     //buat program disini
-    osDelay(100);
+	HAL_IWDG_Refresh(&hiwdg);
+	for (int i=0; i < 100; i++){
+		HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+		osDelay(200);
+	}
+	for (int i=0; i < 100; i++){
+		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+		osDelay(200);
+	}
+	for (int i=0; i < 100; i++){
+		HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+		osDelay(100);
+	}
+
   }
   /* USER CODE END 5 */
 }
